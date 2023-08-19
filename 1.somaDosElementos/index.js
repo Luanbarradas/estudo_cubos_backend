@@ -1,10 +1,10 @@
 function solucao(lista) {
-//seu codigo aqui
-let somaDoDinheiro= 0;
-    for(let i = 0; i < lista.length; i++){
-    somaDoDinheiro += lista[i];
-    }
-console.log(somaDoDinheiro);
+    //seu codigo aqui
+    let somaDoDinheiro= 0;
+        for(let i = 0; i < lista.length; i++){
+        somaDoDinheiro += lista[i];
+        }
+    console.log(somaDoDinheiro);
 }
 
 
