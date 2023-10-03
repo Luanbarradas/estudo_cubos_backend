@@ -1,8 +1,12 @@
-const bancodedados = require('../bancodedados');
+const { contas } = require('../bancodedados');
 let idProximaConta = 1;
 
 const listarContas = (req, res) => {
-    return res.status(200).json(bancodedados.contas);
+    const { senha_banco } = req.query;
+    if(senha_banco !== "123"){
+        return res.status(404).json({mensagem: "Senha incorreta"});
+    }
+    return res.status(200).json(contas);
 }
 
 
@@ -33,6 +37,21 @@ const adcionarConta = (req, res) => {
         return res.status(400).json({ mensagem: "A senha deve ser informada." });
     }
 
+    const cpfExistente = contas.find((encontrarCpf) => {
+        return encontrarCpf.usuario.cpf === cpf
+    });
+
+    if (cpfExistente) {
+        return res.status(404).json({ mensagem: "Já existe conta com o cpf informado." });
+    }
+    
+    const emailExistente = contas.find((encontraEmail) => {
+        return encontraEmail.usuario.email === email
+    });
+
+    if (emailExistente) {
+        return res.status(404).json({ mensagem: "Já existe conta com o email informado." });
+    }
 
     const novaConta = {
             numero: idProximaConta++,
@@ -47,7 +66,7 @@ const adcionarConta = (req, res) => {
             }
         }
 
-    bancodedados.contas.push(novaConta);
+    contas.push(novaConta);
 
     return res.status(201).send();
 }
@@ -55,26 +74,71 @@ const adcionarConta = (req, res) => {
 
 const excluirConta = (req, res) => {
     const numContaExclusao = Number(req.params.id);
-
+    
     if (isNaN(numContaExclusao)) {
         return res.status(400).json({ mensagem: "O número da conta informado não é um número válido." });
     }
 
-    const contaExclusao = bancodedados.contas.findIndex((conta) =>{
+    const contaExclusao = contas.findIndex((conta) =>{
         return conta.numero === numContaExclusao
     });
 
     if (contaExclusao < 0) {
-        return res.status(404).json({ mensagem: "Conta não encontrado." })
+        return res.status(404).json({ mensagem: "Conta não encontrado." });
     }
 
-    const contaExcluida = bancodedados.contas.splice(contaExclusao, 1)[0];
+    if(contas[contaExclusao].saldo > 0){
+        return res.status(400).json({mensagem: "O saldo da conta não está zerado."});
+    }
+
+    const contaExcluida = contas.splice(contaExclusao, 1)[0];
 
     return res.json(contaExcluida);
+}
+
+const atualizarConta = (req, res) => {
+    const { nome, cpf, data_nascimento, telefone, email, senha } = req.body;
+
+    if (!nome || !cpf || !data_nascimento || !telefone || !email || !senha) {
+        return res.status(400).json({ mensagem: "É obrigatório preencher ao menos um campo"});
+    }
+
+    const contaExistente = contas.find((conta) => {
+        return conta.numero === Number(req.params.id)
+    });
+
+    if (!contaExistente) {
+        return res.status(404).json({ mensagem: "Não existe conta para ser atualizada com o numero informado." });
+    }
+
+    const cpfExistente = contas.find((cpf) => {
+        return cpf.usuario.cpf === cpf
+    });
+
+    if (cpfExistente) {
+        return res.status(404).json({ mensagem: "Não existe conta com o cpf informado para ser atualizada." });
+    }
+
+    const emailExistente = contas.find((email) => {
+        return email.usuario.email === email
+    });
+
+    if (emailExistente) {
+        return res.status(404).json({ mensagem: "Não existe conta para ser atualizada com o numero informado." });
+    }
+
+    contaExistente.usuario.nome = nome;
+    contaExistente.usuario.cpf = cpf;
+    contaExistente.usuario.data_nascimento = data_nascimento;
+    contaExistente.usuario.telefone = telefone;
+    contaExistente.usuario.email = email;
+    contaExistente.usuario.senha = senha;
+    return res.json({ mensagem: "Conta atualizada com sucesso"});
 }
 
 module.exports = {
     listarContas,
     adcionarConta,
-    excluirConta
+    excluirConta,
+    atualizarConta
 }
