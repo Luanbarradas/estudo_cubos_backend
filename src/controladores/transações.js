@@ -12,7 +12,7 @@ const depositar = (req,res) => {
         return conta.numero === Number(numero_conta);
     });
 
-    if(encontrarConta === -1){
+    if(!encontrarConta){
         return res.status(404).json({mensagem: "Conta não encontrada"});
     }
 
