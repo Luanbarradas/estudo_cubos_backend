@@ -15,7 +15,7 @@ const cadastrarUsuario = async (req, res) => {
 		);
 
 		if (emailExiste.rowCount > 0) {
-			return res.status(400).json({ mensagem: 'Email já cadastrado.' })
+			return res.status(400).json({ mensagem: 'Já existe usuário cadastrado com o e-mail informado.' })
 		}
 
 		const senhaCriptografada = await bcrypt.hash(senha, 10)
