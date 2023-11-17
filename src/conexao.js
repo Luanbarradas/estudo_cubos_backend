@@ -8,4 +8,11 @@ const pool = new Pool({
     password: '123456' // password: '123456789'
 });
 
-module.exports = pool;
+const query = async(query, params) => {
+    return await pool.query(query, params)
+}
+
+module.exports = {
+    pool,
+    query
+}
