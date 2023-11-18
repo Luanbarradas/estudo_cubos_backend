@@ -3,7 +3,9 @@ const rotas = express();
 
 const { cadastrarUsuario, logarUsuario, detalharUsuario, atualizarUsuario } = require('./controladores/usuario/cadastrarUsuario');
 const { listarCategoria } = require('./controladores/categoria/listarCategorias');
+const { validarToken } = require('./intermediario/validarToken');
 
+rotas.use(validarToken);
 
 rotas.post('/usuario', cadastrarUsuario);
 rotas.post('/login', logarUsuario);

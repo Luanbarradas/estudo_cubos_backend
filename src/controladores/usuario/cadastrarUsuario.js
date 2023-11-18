@@ -70,82 +70,60 @@ const logarUsuario = async (req, res) => {
 }
 
 const detalharUsuario = async (req, res) => {
-	const tokenHeader = req.header('Autorização');
-
-	if (!tokenHeader) {
-		return res.status(401).json({ mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado.' });
-	}
-
-	const token = tokenHeader.split(' ')[1];
-
-	if (!token) {
-		return res.status(401).json({ mensagem: 'Formato de token inválido' });
-	}
-
-	jwt.verify(token, senhaJwt, async (erro, decodificado) => {
-		if (erro) {
-			return res.status(401).json({ mensagem: 'Token de autorização inválido' });
-		}
-		const usuarioId = decodificado.usuarioId;
-		const usuarioQuery = 'SELECT * FROM usuarios WHERE id = $1';
-		const usuario = await query(usuarioQuery, [usuarioId]);
-
-		if (usuario.rowCount === 0) {
-			return res.status(401).json({ mensagem: 'Usuário não encontrado.' });
+	try {
+		if (!req.user) {
+			return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.' });
 		}
 
-		req.usuario = usuario.rows[0];
-	});
+		const { id, nome, email } = req.user;
+
+		const usuario = { id, nome, email };
+
+		return res.status(200).json(usuario);
+	} catch (erro) {
+		console.error(erro);
+		return res.status(500).json({ mensagem: 'Erro interno do servidor' });
+	}
 };
 
 const atualizarUsuario = async (req, res) => {
 	const { nome, email, senha } = req.body;
+	const { id } = req.user;
+	const validarInformacoes = async (informacoes) => {
+		const informacaoFaltando = informacoes.every(informacao => informacao !== undefined);
+		const informacaoVazia = informacoes.every(informacao => informacao.lenght >= 1);
+
+		return !informacaoFaltando || !informacaoVazia;
+	};
+	const emailIgual = async (email) => {
+		const usuario = await query('SELECT email FROM usuarios');
+		return usuario.rows.find(usuario => usuario.email === email) !== undefined;
+	};
+
 
 	try {
-		if (!nome || !email || !senha) {
-			return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios' });
+		const faltaDeInformacao = await validarInformacoes([nome, email, senha]);
+
+		if (faltaDeInformacao) {
+			return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
 		}
 
-		const emailQuery = 'SELECT * FROM usuarios WHERE email = $1 AND id <> $2';
-		const emailExistente = await query(emailQuery, [email]);
+		const emailJaCadastrado = await emailIgual(email);
 
-		if (emailExistente.rowCount > 0) {
-			return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' });
+		if (emailJaCadastrado) {
+			return res.status(400).json({ mensagem: 'Já existe usuário cadastrado com este email' });
 		}
-		const senhaHash = await bcrypt.hash(senha, 10);
 
-		const atualizarQuery = 'UPDATE usuarios SET nome = $1, email = $2, senha = $3'
-		await query(atualizarQuery, [nome, email, senhaHash]);
+		const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-		res.status(204).send();
+		const atualizacaoUsuario = await query(
+			'UPDATE usuarios SET nome = $1, email = $2, senha = $3 WHERE id = $4', [nome, email, senhaCriptografada, id]);
+
+		return res.status(204).json();
 	} catch (erro) {
-		return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+		return res.status(500).json({ message: 'Erro interno de servidor.' });
 	}
-	const tokenHeader = req.header('Autorização');
-
-	if (!tokenHeader) {
-		return res.status(401).json({ mensagem: 'Token não fornecido' });
-	}
-
-	const token = tokenHeader.split(' ')[1];
-
-	if (!token) {
-		return res.status(401).json({ mensagem: 'Formato do token inválido' });
-	}
-	jwt.verify(token, senhaJwt, async (erro, decodificado) => {
-		if (erro) {
-			return res.status(401).json({ mensagem: 'Token de autenticação inválido' });
-		}
-		const idUser = decodificado.idUser;
-		const queryUsuario = 'SELECT * FROM usuarios WHERE id = $1';
-		const usuario = await query(queryUsuario, [idUser]);
-
-		if (usuario.rowCount === 0) {
-			return res.status(401).json({ mensagem: 'Usuário não encontrado' });
-		}
-	})
-}
-
+};
 module.exports = {
 	cadastrarUsuario,
 	logarUsuario,
