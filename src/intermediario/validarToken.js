@@ -13,7 +13,7 @@ const validarToken = async (req, res, next) => {
 
         const { id } = await jwt.verify(token, senhaJwt);
         const { rows, rowCount } = await query('SELECT * from usuarios where id = $1', [id]);
-        req.user = rows[0]
+        req.usuario = rows[0]
 
         if (rowCount < 1) {
             return res.status(401).json({ mensagem: 'Usuário não está logado.' });

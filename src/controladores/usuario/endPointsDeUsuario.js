@@ -72,11 +72,11 @@ const logarUsuario = async (req, res) => {
 
 const detalharUsuario = async (req, res) => {
 	try {
-		if (!req.user) {
+		if (!req.usuario) {
 			return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.' });
 		}
 
-		const { id, nome, email } = req.user;
+		const { id, nome, email } = req.usuario;
 
 		const usuario = { id, nome, email };
 
@@ -89,7 +89,7 @@ const detalharUsuario = async (req, res) => {
 
 const atualizarUsuario = async (req, res) => {
 	const { nome, email, senha } = req.body;
-	const { id } = req.user;
+	const { id } = req.usuario;
 	const validarInformacoes = async (informacoes) => {
 		const informacaoFaltando = informacoes.every(informacao => informacao !== undefined);
 		const informacaoVazia = informacoes.every(informacao => informacao.lenght >= 1);
