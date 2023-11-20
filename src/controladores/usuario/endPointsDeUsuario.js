@@ -68,7 +68,7 @@ const logarUsuario = async (req, res) => {
 	} catch (error) {
 		return res.status(500).json({ mensagem: 'Erro interno do servidor' })
 	}
-}
+};
 
 const detalharUsuario = async (req, res) => {
 	try {
