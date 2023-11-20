@@ -1,4 +1,7 @@
-const { query } = require('../../conexao')
+const { query } = require('../../conexao');
+const jwt = require('jsonwebtoken');
+const { token } = require('../../intermediario/validarToken');
+const { senhaJWT } = require('../senhaJWT/senhaJWT');
 
 const cadastrarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body;
@@ -18,13 +21,19 @@ const cadastrarTransacao = async (req, res) => {
     }
 
     try {
+        const tokenUsuario = jwt.verify(token, senhaJWT);
+
+        const usuarioId = tokenUsuario.usuario.id; 
+
+        console.log('usuario id:', usuarioId);
+
         const inserirTransacao = `
             INSERT INTO transacoes (tipo, descricao, valor, data, categoria_id, usuario_id)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
-        `;
+        `
 
-        const informacoesTransacao = [tipo, descricao, valor, data, categoria_id, req.usuario.id];
+        const informacoesTransacao = [tipo, descricao, valor, data, categoria_id, usuarioId];
 
         const { rows } = await query(inserirTransacao, informacoesTransacao);
 
