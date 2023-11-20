@@ -5,13 +5,11 @@ const { cadastrarUsuario, logarUsuario, detalharUsuario, atualizarUsuario } = re
 const { listarCategoria } = require('./controladores/categoria/listarCategorias');
 const { validarToken } = require('./intermediario/validarToken');
 
-rotas.use(validarToken);
-
 rotas.post('/usuario', cadastrarUsuario);
 rotas.post('/login', logarUsuario);
-rotas.get('/usuario', detalharUsuario);
-rotas.put('/usuario', atualizarUsuario);
+rotas.get('/usuario', validarToken, detalharUsuario);
+rotas.put('/usuario', validarToken, atualizarUsuario);
 
-rotas.get('/categoria', listarCategoria);
+rotas.get('/categoria', validarToken, listarCategoria);
 
 module.exports = rotas;
