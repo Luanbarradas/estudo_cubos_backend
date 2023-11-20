@@ -1,7 +1,7 @@
 const express = require('express');
 const rotas = express();
 
-const { cadastrarUsuario, logarUsuario, detalharUsuario, atualizarUsuario } = require('./controladores/usuario/cadastrarUsuario');
+const { cadastrarUsuario, logarUsuario, detalharUsuario, atualizarUsuario } = require('./controladores/usuario/endPointsDeUsuario');
 const { listarCategoria } = require('./controladores/categoria/listarCategorias');
 const { validarToken } = require('./intermediario/validarToken');
 
