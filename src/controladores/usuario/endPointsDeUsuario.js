@@ -87,39 +87,39 @@ const detalharUsuario = async (req, res) => {
 }
 
 const atualizarUsuario = async (req, res) => {
-	const {nome, email, senha} = req.body;
+	const { nome, email, senha } = req.body;
 
 	try {
 		if (!nome || !email || !senha) {
-		return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
-	}
+			return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
+		}
 
-	const emailExiste = await query(
-		'SELECT * FROM usuarios WHERE email = $1',
-		[email]
-	);
+		const emailExiste = await query(
+			'SELECT * FROM usuarios WHERE email = $1',
+			[email]
+		);
 
-	if (emailExiste.rowCount > 0) {
-		return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
-	}
+		if (emailExiste.rowCount > 0) {
+			return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
+		}
 
-	const { rowCount } = await query(
-		`SELECT * FROM usuarios WHERE id = $1`,
-		[req.usuario.id]
-	)
+		const { rowCount } = await query(
+			`SELECT * FROM usuarios WHERE id = $1`,
+			[req.usuario.id]
+		)
 
-	if(rowCount === 0){
-		return res.status(404).json({ mensagem: 'Usuario não existe' })
-	}
+		if (rowCount === 0) {
+			return res.status(404).json({ mensagem: 'Usuario não existe' })
+		}
 
-	await query('UPDATE usuarios SET email = $1 WHERE id = $2', [email, req.usuario.id]);
+		await query('UPDATE usuarios SET email = $1 WHERE id = $2', [email, req.usuario.id]);
 
-	return res.status(204).send()
+		return res.status(204).send()
 	} catch (error) {
 		return res.status(500).json({ message: 'Erro interno de servidor.' });
 	}
 
-	
+
 }
 module.exports = {
 	cadastrarUsuario,
