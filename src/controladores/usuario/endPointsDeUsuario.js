@@ -72,23 +72,27 @@ const logarUsuario = async (req, res) => {
 
 const detalharUsuario = async (req, res) => {
 	try {
-		if (!req.usuario) {
+		if (!req.user) {
 			return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.' });
 		}
 
-		const { id, nome, email } = req.usuario;
+		const { id, nome, email } = req.user;
 
 		const usuario = { id, nome, email };
 
 		return res.status(200).json(usuario);
 	} catch (erro) {
-		console.error(erro);
 		return res.status(500).json({ mensagem: 'Erro interno do servidor' });
 	}
 }
 
 const atualizarUsuario = async (req, res) => {
-	const {nome, email, senha} = req.body;
+	const { nome, email, senha } = req.body;
+	const { senha: _, ...usuario } = req.user;
+
+	if (!nome || !email || !senha) {
+		return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." });
+	}
 
 	try {
 		if (!nome || !email || !senha) {
