@@ -82,7 +82,6 @@ const detalharUsuario = async (req, res) => {
 
 		return res.status(200).json(usuario);
 	} catch (erro) {
-		console.error(erro);
 		return res.status(500).json({ mensagem: 'Erro interno do servidor' });
 	}
 }
@@ -117,8 +116,6 @@ const atualizarUsuario = async (req, res) => {
 
 	return res.status(204).send()
 	} catch (error) {
-
-		console.log(error)
 		return res.status(500).json({ message: 'Erro interno de servidor.' });
 	}
 
