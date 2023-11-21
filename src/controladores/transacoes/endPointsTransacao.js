@@ -39,7 +39,7 @@ const listarTransacoes = async (req, res) => {
     try {
         const { rows: transacoes } = await query(`
         select t.*, c.descricao as categoria_nome from transacoes t join categorias c on t.catagoria_id = c.id where usuario_id = $1`,
-            [req.usuario.id]
+            [req.user.id]
         )
 
         return res.status(200).json(transacoes)
