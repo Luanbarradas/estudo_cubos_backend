@@ -92,37 +92,33 @@ const atualizarUsuario = async (req, res) => {
 
 	try {
 		if (!nome || !email || !senha) {
-		return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
-	}
+			return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
+		}
 
-	const emailExiste = await query(
-		'SELECT * FROM usuarios WHERE email = $1',
-		[email]
-	);
+		const emailExiste = await query('SELECT * FROM usuarios WHERE email = $1',[email]);
 
-	if (emailExiste.rowCount > 0) {
-		return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
-	}
+		if (emailExiste.rowCount > 0) {
+			return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
+		}
 
-	const { rowCount } = await query(
-		`SELECT * FROM usuarios WHERE id = $1`,
-		[req.usuario.id]
-	)
+		const token = req.headers.authorization.split(' ')[1];
 
-	if(rowCount === 0){
-		return res.status(404).json({ mensagem: 'Usuario não existe' })
-	}
+    	if (!token) {
+    		return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.'});
+    	}
 
-	await query('UPDATE usuarios SET email = $1 WHERE id = $2', [email, req.usuario.id]);
+		const tokenDecodificado = jwt.verify(token, senhaJwt);
 
-	return res.status(204).send()
+    	const usuario_id = tokenDecodificado.id;
+
+		const senhaCriptografada = await bcrypt.hash(senha, 10);
+
+		await query('UPDATE usuarios SET nome = $1, email = $2, senha = $3 WHERE id = $4', [nome, email, senhaCriptografada, usuario_id]);
+
+		return res.status(204).send()
 	} catch (error) {
-
-		console.log(error)
-		return res.status(500).json({ message: 'Erro interno de servidor.' });
+		return res.status(500).json({ message: 'Erro interno de servidor.' })
 	}
-
-	
 }
 module.exports = {
 	cadastrarUsuario,

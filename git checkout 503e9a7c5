@@ -1,0 +1,172 @@
+[33mcommit 37c6e6917e99c1494b6a867f94c792a7ee230026[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 503e9a7 b42130d
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 21:10:02 2023 -0300
+
+    Merge branch 'main' of github.com:Luanbarradas/desafio-backend-modulo-03-sistema-dindin-dds-t13-dbe-t04
+
+[33mcommit 503e9a7c5f55f7bcb0073af057b0865b31acedef[m[33m ([m[1;31morigin/branch-transacao[m[33m, [m[1;32mbranch-transacao[m[33m)[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 20:47:48 2023 -0300
+
+    erros de transações e usuarios consertados: usuario - cadastrar, logar, detalhar e atualizar. transações - cadastrar e listar
+
+[33mcommit 461c94672c9d2e785cc9c95b4db5d9ea114e5ea4[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 17:48:01 2023 -0300
+
+    ainda com erros
+
+[33mcommit d94a6f23ad64dc8397c9c11faddb8da73b9b064e[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 14:40:48 2023 -0300
+
+    cadastrar transação com erro
+
+[33mcommit b42130d214936dc0ce010a24a47ed608cc74fa99[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 13:30:36 2023 -0300
+
+    alterando
+
+[33mcommit aa451be065d357651f6f5e2b691fc8547ac3e089[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 12:30:21 2023 -0300
+
+    resolvendo erro no listar categorias
+
+[33mcommit df4bf9ec95538f2588478674eb0574cb9b5ceb7b[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 11:51:18 2023 -0300
+
+    Resolvendo erros
+
+[33mcommit 1b5c62c08fffd25853a4460403b2b5b190dd91de[m
+Merge: 026f60c d7d752c
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 11:49:44 2023 -0300
+
+    Merge branch 'main' of https://github.com/Luanbarradas/desafio-backend-modulo-03-sistema-dindin-dds-t13-dbe-t04
+
+[33mcommit 026f60cc3529f4b2918beab03fed28111c069502[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 11:48:31 2023 -0300
+
+    alterando rota
+
+[33mcommit 60fe21e7b9abbc1f5f1f9d6766e60fdb58bc293c[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Mon Nov 20 11:45:24 2023 -0300
+
+    Resolvendo erros do token
+
+[33mcommit d7d752ca1837598a82867632cee2f6b3b1270371[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 11:39:49 2023 -0300
+
+    mudando nome do arquivo de usuario
+
+[33mcommit 913d1cc704c40bc7ce2e33369488f84b8858157f[m
+Merge: c6e9df8 cf83c7e
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Mon Nov 20 11:34:40 2023 -0300
+
+    Merge branch 'main' of github.com:Luanbarradas/desafio-backend-modulo-03-sistema-dindin-dds-t13-dbe-t04
+
+[33mcommit cf83c7eb86061d863d48159d4e1c67977d1f9514[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Sat Nov 18 20:27:51 2023 -0300
+
+    Corrigindo endpoints e adicionado intermediario
+
+[33mcommit c6e9df824f08a24406f713ceab6e7b9d8187b000[m
+Merge: f2b5a78 13b2ac4
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Sat Nov 18 13:09:47 2023 -0300
+
+    Merge branch 'main' of github.com:Luanbarradas/desafio-backend-modulo-03-sistema-dindin-dds-t13-dbe-t04
+
+[33mcommit f2b5a78381d970dcaeb8cd9d350b3d4c1212221d[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Sat Nov 18 13:06:04 2023 -0300
+
+    teste
+
+[33mcommit 13b2ac4c73b85413af5b6353c121595d5d4f63b2[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Sat Nov 18 10:39:01 2023 -0300
+
+    Apagando middleware de validar cadastro
+
+[33mcommit aa13ab880ede5856348665d49bac97b690148ccd[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Sat Nov 18 10:23:09 2023 -0300
+
+    Adicionando novas rotas novas rotas e controladores
+
+[33mcommit 1ed934ff9a14407b3f11a808f5bea3ac9bba2266[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 18:07:18 2023 -0300
+
+    logarUsuario
+
+[33mcommit fbd35225039ef6410e610ddf8231190e17fbe308[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 15:20:09 2023 -0300
+
+    correção da mensagem de erro de email já cadastrado
+
+[33mcommit c6fbac14497ce86fb48b62c404ab91fff6dde6c3[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 15:09:34 2023 -0300
+
+    cadastrar usuario
+
+[33mcommit 44002875e3cbe50083946f353c1ce6ebb32eb82e[m
+Merge: 453bfd5 67658e5
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 13:12:15 2023 -0300
+
+    Merge branch 'main' of github.com:Luanbarradas/desafio-backend-modulo-03-sistema-dindin-dds-t13-dbe-t04
+
+[33mcommit 453bfd5c47fda5cff3edc8ed39125c8ed9c9f5eb[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 13:09:57 2023 -0300
+
+    organização de pastas
+
+[33mcommit 67658e515e9f3d2f6ed68133f74a5bf038028df6[m
+Author: Joao Batista Neto <joaobneto03@outlook.com>
+Date:   Fri Nov 17 12:35:36 2023 -0300
+
+    Adicionando Dependencias
+
+[33mcommit 154dda90ba44f6ada44ff1fd02afac03098d78fc[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 12:04:18 2023 -0300
+
+    senhas postgres
+
+[33mcommit 3e26ba154f608e6afef600051a3f71d5724d0b17[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 11:57:10 2023 -0300
+
+    dump.sql
+
+[33mcommit f8cef8b152dee0858c96ff1c7d3b468eaf1660f5[m
+Author: Luan Barradas <barradas.luk@gmail.com>
+Date:   Fri Nov 17 10:02:07 2023 -0300
+
+    criação da pasta src
+
+[33mcommit 53093fd99b93d19ba179fadef4abe27cd078624a[m
+Author: jv <jv@NEARSURE-BR-412.local>
+Date:   Thu Nov 16 13:24:22 2023 -0300
+
+    primeiro commit
+
+[33mcommit 3852df8b86582064aff934f8f73ffaa06d8b7ef4[m
+Author: Joao Victor Martinelli <jvmartinellis@gmail.com>
+Date:   Thu Nov 16 13:21:30 2023 -0300
+
+    Initial commit
