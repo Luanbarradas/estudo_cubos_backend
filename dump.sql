@@ -17,7 +17,7 @@ id serial primary key,
 descricao varchar(255) not null,
 valor integer not null,
 data timestamp not null,
-catagoria_id integer references categorias(id) not null,
+categoria_id integer references categorias(id) not null, /* nome corrigido */
 usuario_id integer references categorias(id) not null,
 tipo text not null
 );

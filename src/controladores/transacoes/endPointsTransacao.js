@@ -24,7 +24,7 @@ const cadastrarTransacao = async (req, res) => {
             return res.status(400).json({ mensagem: 'A categoria informada não existe.' });
         }
 
-        const { rows } = await query(`INSERT INTO transacoes (descricao, valor, data, catagoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6) returning *`, [descricao, valor, data, categoria_id, usuario_id, tipo]);
+        const { rows } = await query(`INSERT INTO transacoes (descricao, valor, data, categoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6) returning *`, [descricao, valor, data, categoria_id, usuario_id, tipo]);
 
         rows[0].categoria_nome = categoriaExiste.rows[0].descricao
 
@@ -38,7 +38,7 @@ const cadastrarTransacao = async (req, res) => {
 const listarTransacoes = async (req, res) => {
     try {
         const { rows: transacoes } = await query(`
-        select t.*, c.descricao as categoria_nome from transacoes t join categorias c on t.catagoria_id = c.id where usuario_id = $1`,
+        select t.*, c.descricao as categoria_nome from transacoes t join categorias c on t.categoria_id = c.id where usuario_id = $1`,
         [req.user.id]
         )
 
@@ -55,8 +55,8 @@ const detalharTransacaoId = async (req, res) => {
         const usuario_id = await obterUsuarioId(req);
 
         const transacaoQuery = await query(
-            `SELECT t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.catagoria_id, c.descricao as categoria_nome
-            FROM transacoes t JOIN categorias c ON t.catagoria_id = c.id 
+            `SELECT t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.categoria_id, c.descricao as categoria_nome
+            FROM transacoes t JOIN categorias c ON t.categoria_id = c.id 
             WHERE t.usuario_id = $1 AND t.id = $2`, [usuario_id, id]);
 
         if (transacaoQuery.rowCount < 1) {
@@ -84,7 +84,7 @@ const atualizarTransacao = async (req, res) => {
 
 		const usuario_id = await obterUsuarioId(req);
 
-		await query('UPDATE transacoes SET descricao =$1, valor =$2, data = $3, catagoria_id = $4, tipo = $5 WHERE id = $6 and catagoria_id = $7', [descricao, valor, data, categoria_id, tipo, usuario_id, id]);
+		await query('UPDATE transacoes SET descricao =$1, valor =$2, data = $3, categoria_id = $4, tipo = $5 WHERE id = $6 and categoria_id = $7', [descricao, valor, data, categoria_id, tipo, usuario_id, id]);
 
 		return res.status(204).send()
 	} catch (error) {
