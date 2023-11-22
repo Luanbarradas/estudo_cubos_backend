@@ -67,13 +67,11 @@ const detalharTransacaoId = async (req, res) => {
             FROM transacoes t JOIN categorias c ON t.catagoria_id = c.id 
             WHERE t.usuario_id = $1 AND t.id = $2`, [usuario_id, id]);
 
-            console.log(transacaoQuery)
-
         if (transacaoQuery.rowCount < 1) {
-            return res.status(404).json({ mensagem: 'Transação inexistente.' });
+            return res.status(404).json({ mensagem: 'Transação não encontrada.' });
         }
         
-        return res.status(200).json(transacao.rows[0]);
+        return res.status(200).json(transacaoQuery.rows[0]);
     } catch (error) {
         return res.status(500).json({ message: 'Erro interno de servidor.' });
     }
