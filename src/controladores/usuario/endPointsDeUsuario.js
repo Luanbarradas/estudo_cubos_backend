@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const { query } = require('../../conexao')
 const jwt = require('jsonwebtoken')
 const senhaJwt = require('../senhaJWT/senhaJWT')
+const { obterUsuarioId } = require('../../intermediario/validarToken');
 
 const cadastrarUsuario = async (req, res) => {
 	const { nome, email, senha } = req.body;
@@ -100,15 +101,7 @@ const atualizarUsuario = async (req, res) => {
 			return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
 		}
 
-		const token = req.headers.authorization.split(' ')[1];
-
-    	if (!token) {
-    		return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.'});
-    	}
-
-		const tokenDecodificado = jwt.verify(token, senhaJwt);
-
-    	const usuario_id = tokenDecodificado.id;
+		const usuario_id = await obterUsuarioId(req);
 
 		const senhaCriptografada = await bcrypt.hash(senha, 10);
 
@@ -119,6 +112,7 @@ const atualizarUsuario = async (req, res) => {
 		return res.status(500).json({ message: 'Erro interno de servidor.' })
 	}
 }
+
 module.exports = {
 	cadastrarUsuario,
 	logarUsuario,

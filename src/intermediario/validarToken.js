@@ -25,6 +25,25 @@ const validarToken = async (req, res, next) => {
     }
 }
 
+const obterUsuarioId = async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+
+    try {
+        if (!token) {
+    		return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.'});
+    	}
+
+		const tokenDecodificado = jwt.verify(token, senhaJwt);
+
+    	const usuario_id = tokenDecodificado.id;
+
+        return await usuario_id;
+    } catch (error) {
+        return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+    }
+}
+
 module.exports = {
-    validarToken
+    validarToken,
+    obterUsuarioId
 }

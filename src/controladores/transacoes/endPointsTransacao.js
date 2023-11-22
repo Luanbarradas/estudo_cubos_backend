@@ -1,6 +1,7 @@
 const { query } = require('../../conexao');
-const jwt = require('jsonwebtoken');
-const senhaJWT = require('../senhaJWT/senhaJWT');
+// const jwt = require('jsonwebtoken');
+// const senhaJwt = require('../senhaJWT/senhaJWT');
+const { obterUsuarioId } = require('../../intermediario/validarToken');
 
 const cadastrarTransacao = async (req, res) => {
     const { descricao, valor, data, categoria_id, tipo } = req.body;
@@ -13,8 +14,7 @@ const cadastrarTransacao = async (req, res) => {
         return res.status(400).json({ mensagem: "O campo 'tipo' deve ser 'entrada' ou 'saida'." });
     }
 
-    const token = req.headers.authorization.split(' ')[1]
-    const tokenUsuario = jwt.verify(token, senhaJWT);
+    const usuario_id = await obterUsuarioId(req);
 
     try {
 
@@ -24,7 +24,7 @@ const cadastrarTransacao = async (req, res) => {
             return res.status(400).json({ mensagem: 'A categoria informada não existe.' });
         }
 
-        const { rows } = await query(`INSERT INTO transacoes (descricao, valor, data, catagoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6) returning *`, [descricao, valor, data, categoria_id, tokenUsuario.id, tipo]);
+        const { rows } = await query(`INSERT INTO transacoes (descricao, valor, data, catagoria_id, usuario_id, tipo) values ($1, $2, $3, $4, $5, $6) returning *`, [descricao, valor, data, categoria_id, usuario_id, tipo]);
 
         rows[0].categoria_nome = categoriaExiste.rows[0].descricao
 
@@ -52,15 +52,7 @@ const detalharTransacaoId = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const token = req.headers.authorization.split(' ')[1];
-
-    	if (!token) {
-    		return res.status(401).json({ mensagem: 'Não autorizado. Token inválido ou ausente.'});
-    	}
-
-		const tokenDecodificado = jwt.verify(token, senhaJWT);
-
-    	const usuario_id = tokenDecodificado.id;
+        const usuario_id = await obterUsuarioId(req);
 
         const transacaoQuery = await query(
             `SELECT t.id, t.tipo, t.descricao, t.valor, t.data, t.usuario_id, t.catagoria_id, c.descricao as categoria_nome
@@ -77,8 +69,32 @@ const detalharTransacaoId = async (req, res) => {
     }
 }
 
+const atualizarTransacao = async (req, res) => {
+	const { descricao, valor, data, categoria_id, tipo } = req.body;
+    const { id } = req.params;
+	
+	try {
+		if (!descricao || !valor || !data || !categoria_id || !tipo) {
+			return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
+		}
+
+        if (tipo !== 'entrada' && tipo !== 'saida') {
+            return res.status(400).json({ mensagem: "O campo 'tipo' deve ser 'entrada' ou 'saida'." });
+        }
+
+		const usuario_id = await obterUsuarioId(req);
+
+		await query('UPDATE transacoes SET descricao =$1, valor =$2, data = $3, catagoria_id = $4, tipo = $5 WHERE id = $6 and catagoria_id = $7', [descricao, valor, data, categoria_id, tipo, usuario_id, id]);
+
+		return res.status(204).send()
+	} catch (error) {
+		return res.status(500).json({ message: 'Erro interno de servidor.' })
+	}
+}
+
 module.exports = {
     cadastrarTransacao,
     listarTransacoes,
-    detalharTransacaoId
+    detalharTransacaoId,
+    atualizarTransacao
 }
