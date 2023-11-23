@@ -72,7 +72,7 @@ const detalharTransacaoId = async (req, res) => {
 const atualizarTransacao = async (req, res) => {
 	const { descricao, valor, data, categoria_id, tipo } = req.body;
     const { id } = req.params;
-	
+
 	try {
 		if (!descricao || !valor || !data || !categoria_id || !tipo) {
 			return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
@@ -84,7 +84,16 @@ const atualizarTransacao = async (req, res) => {
 
 		const usuario_id = await obterUsuarioId(req);
 
-		await query('UPDATE transacoes SET descricao =$1, valor =$2, data = $3, categoria_id = $4, tipo = $5 WHERE id = $6 and categoria_id = $7', [descricao, valor, data, categoria_id, tipo, usuario_id, id]);
+        const { rowCount } = await query(
+			'SELECT * FROM transacoes WHERE id = $1 and usuario_id = $2',
+			[id, usuario_id]
+		)
+
+		if (rowCount === 0) {
+			return res.status(404).json({ mensagem: 'Transação não encontrada.' })
+		}
+
+		await query('UPDATE transacoes SET descricao =$1, valor =$2, data = $3, categoria_id = $4, tipo = $5 WHERE id = $6 and usuario_id = $7', [descricao, valor, data, categoria_id, tipo, id, usuario_id]);
 
 		return res.status(204).send()
 	} catch (error) {
@@ -92,9 +101,34 @@ const atualizarTransacao = async (req, res) => {
 	}
 }
 
+const deletarTransacao = async (req, res) => {
+	const { id } = req.params
+
+	try {
+		const usuario_id = await obterUsuarioId(req);
+
+		const { rows, rowCount } = await query(
+			'SELECT  id, descricao, valor, data, tipo from transacoes WHERE id = $1 and usuario_id = $2',
+			[id, usuario_id]
+		)
+
+		if (rowCount === 0) {
+			return res.status(404).json({ mensagem: 'Transação não encontrada.' })
+		}
+
+		await query('DELETE FROM transacoes WHERE id = $1', [id])
+
+		return res.status(204).send()
+	} catch (error) {
+		return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+	}
+}
+
+
 module.exports = {
     cadastrarTransacao,
     listarTransacoes,
     detalharTransacaoId,
-    atualizarTransacao
+    atualizarTransacao,
+    deletarTransacao
 }
