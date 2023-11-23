@@ -1,6 +1,4 @@
 const { query } = require('../../conexao');
-// const jwt = require('jsonwebtoken');
-// const senhaJwt = require('../senhaJWT/senhaJWT');
 const { obterUsuarioId } = require('../../intermediario/validarToken');
 
 const cadastrarTransacao = async (req, res) => {
@@ -124,11 +122,34 @@ const deletarTransacao = async (req, res) => {
 	}
 }
 
+const extratoTransacoes = async (req, res) => {
+    try {
+        const usuario_id = await obterUsuarioId(req);
+
+        const consultaEntradas = 'SELECT COALESCE(SUM(valor), 0) as entrada FROM transacoes WHERE usuario_id = $1 AND tipo = $2';
+
+        const resultadoEntradas = await query(consultaEntradas, [usuario_id, 'entrada']);
+
+        const entrada = resultadoEntradas.rows[0].entrada;
+
+
+        const consultaSaidas = 'SELECT COALESCE(SUM(valor), 0) as saida FROM transacoes WHERE usuario_id = $1 AND tipo = $2';
+
+        const resultadoSaidas = await query(consultaSaidas, [usuario_id, 'saida']);
+
+        const saida = resultadoSaidas.rows[0].saida;
+
+        res.status(200).json({ entrada, saida });
+    } catch (error) {
+        res.status(500).json({ mensagem: 'Erro interno no servidor' });
+    }
+}
 
 module.exports = {
     cadastrarTransacao,
     listarTransacoes,
     detalharTransacaoId,
     atualizarTransacao,
-    deletarTransacao
+    deletarTransacao,
+    extratoTransacoes
 }
