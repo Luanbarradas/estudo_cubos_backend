@@ -107,7 +107,7 @@ const deletarTransacao = async (req, res) => {
 	try {
 		const usuario_id = await obterUsuarioId(req);
 
-		const { rows, rowCount } = await query(
+		const rowCount = await query(
 			'SELECT  id, descricao, valor, data, tipo from transacoes WHERE id = $1 and usuario_id = $2',
 			[id, usuario_id]
 		)
