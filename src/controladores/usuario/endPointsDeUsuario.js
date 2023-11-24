@@ -94,14 +94,13 @@ const atualizarUsuario = async (req, res) => {
 		if (!nome || !email || !senha) {
 			return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." })
 		}
-
-		const emailExiste = await query('SELECT * FROM usuarios WHERE email = $1',[email]);
-
-		if (emailExiste.rowCount > 0) {
-			return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' })
-		}
-
 		const usuario_id = await obterUsuarioId(req);
+
+		const emailExiste = await query('SELECT * FROM usuarios WHERE email = $1 AND id != $2', [email, usuario_id]);
+
+        if (emailExiste.rowCount > 0) {
+            return res.status(403).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' });
+        }
 
 		const senhaCriptografada = await bcrypt.hash(senha, 10);
 
